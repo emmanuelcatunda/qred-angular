@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { QredNgComponent } from './qred-ng.component';
+import { QredNg } from './qred-ng.component';
 
 describe('QredNgComponent', () => {
-  let component: QredNgComponent;
-  let fixture: ComponentFixture<QredNgComponent>;
+  let component: QredNg;
+  let fixture: ComponentFixture<QredNg>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ QredNgComponent ]
+      declarations: [ QredNg ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(QredNgComponent);
+    fixture = TestBed.createComponent(QredNg);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

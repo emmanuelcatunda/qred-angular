@@ -6,14 +6,18 @@ import { Input } from '@angular/core';
 @Component({
   selector: 'qred-ng',
   templateUrl: './qred-ng.component.html',
-  styles: ['qred-ng.component.css']
+  styleUrls: ['./qred-ng.component.css']
 })
 export class QredNg implements OnInit,AfterViewInit,OnChanges {
 
-  cssClass:String = ""
-  baseComponentStyle:String = "width:200px;height:200px; border:3px solid red;text-align:inherit;position: inherit;"
+  cssClass:String = "target-color-red"
+
+  @ViewChild('canvasDisplay', {read: ElementRef})
+  canvasDisplayElementRef:ElementRef;
+
   @ViewChild('videoPlayer', {read: ElementRef})
   videoplayerElementRef: ElementRef;
+
   videoplayer: HTMLVideoElement;
 
   @Input()
@@ -22,35 +26,46 @@ export class QredNg implements OnInit,AfterViewInit,OnChanges {
   @Input()
   height:String
 
- constructor() { this.width = '\''+this.width+'\'';}
+ constructor() {}
 
   ngOnInit() {
     console.log("init")
-
-    //this.width += '%';
   }
   ngOnChanges(){
       console.log("changes")
-
-
   }
-  ngAfterViewInit() {
-    console.log('vinit')
-    if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-        navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
-            this.videoplayer = this.videoplayerElementRef.nativeElement;
 
-            if ('srcObject' in this.videoplayer) {
-                this.videoplayer.defaultMuted=true;
-                this.videoplayer.msHorizontalMirror=false;
-                this.videoplayer.srcObject = stream;
-                this.videoplayer.src = (window.URL || (window as any ).webkitURL).createObjectURL(stream);
-            }
-            else if((navigator as any ).mozGetUserMedia){
-                (this.videoplayer as any ).mozSrcObject = stream;
-              }
-            this.videoplayer.play();
-        });
+  initCanvasDisplayAndCapture(video:HTMLVideoElement,canvasElementRef:ElementRef){
+    const canvas = canvasElementRef.nativeElement;
+    const canvasContext = canvas.getContext("2d")
+    setInterval(() => canvasContext.drawImage(video, 0, 0, canvas.width, canvas.height), 500);
+  }
+
+  initVideoPlayer(stream:MediaStream,videoplayerElementRef:ElementRef):HTMLVideoElement{
+    let videoplayer:HTMLVideoElement = this.videoplayerElementRef.nativeElement;
+
+    if ('srcObject' in videoplayer) {
+        videoplayer.defaultMuted=true;
+        videoplayer.msHorizontalMirror=false;
+        videoplayer.srcObject = stream;
+        videoplayer.src = (window.URL || (window as any ).webkitURL).createObjectURL(stream);
+    }
+    else if((navigator as any ).mozGetUserMedia){
+        (videoplayer as any ).mozSrcObject = stream;
+      }
+       videoplayer.play();
+       this.videoplayer = videoplayer;
+       return videoplayer;
+  }
+
+  ngAfterViewInit() {
+    if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+
+        navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
+            return this.initVideoPlayer(stream,this.videoplayerElementRef);
+        }).then(videoPlayer=>{
+              this.initCanvasDisplayAndCapture(videoPlayer,this.canvasDisplayElementRef);
+          });
 
     }
   }
