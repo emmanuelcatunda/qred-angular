@@ -34,10 +34,21 @@ export class QredNg implements OnInit,AfterViewInit,OnChanges {
   ngOnChanges(){
   }
 
-  initCanvasDisplayAndCapture(video:HTMLVideoElement,canvasElementRef:ElementRef){
-    const canvas = canvasElementRef.nativeElement;
-    const canvasContext = canvas.getContext("2d")
-    setInterval(() => canvasContext.drawImage(video, 0, 0, canvas.width, canvas.height), 500);
+  captureImageData(){
+    
+  }
+
+  initCanvasDisplayAndStartCapture(video:HTMLVideoElement,canvasElementRef:ElementRef){
+    let canvas = canvasElementRef.nativeElement;
+    let canvasContext = canvas.getContext("2d")
+    let imageData;
+    setInterval(() => {
+      canvasContext.drawImage(video, 0, 0, canvas.width, canvas.height),
+      imageData = canvasContext.getImageData( 1, 1, canvas.width, canvas.height)
+    }, 1000);
+    //let data = console.log(canvasContext.getImageData( 1, 1, canvas.width, canvas.height));
+    //canvasContext.drawImage(video, 0, 0, canvas.width, canvas.height);
+
   }
 
   initVideoPlayer(stream:MediaStream,videoplayerElementRef:ElementRef):HTMLVideoElement{
@@ -63,7 +74,7 @@ export class QredNg implements OnInit,AfterViewInit,OnChanges {
         navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
             return this.initVideoPlayer(stream,this.videoplayerElementRef);
         }).then(videoPlayer=>{
-              this.initCanvasDisplayAndCapture(videoPlayer,this.canvasDisplayElementRef);
+              this.initCanvasDisplayAndStartCapture(videoPlayer,this.canvasDisplayElementRef);
           });
     }
   }
