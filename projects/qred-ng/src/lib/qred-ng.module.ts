@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core';
-import { QredNgComponent } from './qred-ng.component';
-
+import { QredNg } from './qred-ng.component';
+import { ViewChild } from '@angular/core';
 @NgModule({
   imports: [
   ],
-  declarations: [QredNgComponent],
-  exports: [QredNgComponent]
+  declarations: [QredNg],
+  exports: [QredNg]
 })
 export class QredNgModule { }

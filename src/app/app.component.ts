@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import {QredNg} from 'projects/qred-ng/src/public_api'
 
 @Component({
   selector: 'app-root',
