@@ -11,9 +11,6 @@
 #target-frame>:first-child:before {bottom:0;right:0;border-width: 0 3px 3px 0}
 #target-frame>:first-child:after {bottom:0;left:0;border-width: 0 0 3px 3px}
 
-/* .target-color-red{border-color:red;}
-.green-corner{border-color:green;} */
-
 .target-color-red#target-frame,
 .target-color-red#target-frame:before,
 .target-color-red#target-frame:after,

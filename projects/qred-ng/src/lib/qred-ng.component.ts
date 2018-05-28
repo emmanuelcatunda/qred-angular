@@ -32,7 +32,6 @@ export class QredNg implements OnInit,AfterViewInit,OnChanges {
     console.log("init")
   }
   ngOnChanges(){
-      console.log("changes")
   }
 
   initCanvasDisplayAndCapture(video:HTMLVideoElement,canvasElementRef:ElementRef){
@@ -66,7 +65,6 @@ export class QredNg implements OnInit,AfterViewInit,OnChanges {
         }).then(videoPlayer=>{
               this.initCanvasDisplayAndCapture(videoPlayer,this.canvasDisplayElementRef);
           });
-
     }
   }
 }
