@@ -8,8 +8,6 @@ import jsQR from 'jsqr';
 })
 export class QredNg implements OnInit,AfterViewInit,OnChanges {
 
-
-
   cssClass:String = "target-color-default"
 
   @ViewChild('canvasDisplay', {read: ElementRef})
@@ -17,8 +15,8 @@ export class QredNg implements OnInit,AfterViewInit,OnChanges {
 
   @ViewChild('videoPlayer', {read: ElementRef})
   videoplayerElementRef: ElementRef;
-
   videoplayer: HTMLVideoElement;
+
 
   @Input()
   QRcodeHighlightColor = "green"
@@ -67,20 +65,21 @@ private scanQrcode(canvas,video){
     let imageData = this.captureImageData(canvas)
     let qrCode = this.decodeQrCodeImage(imageData)
     this.detectQrCode(this.QRcodeHighlightColor,qrCode,canvasContext)
-    if(qrCode)
-    this.qrCodeScanned.emit(qrCode.data)
-    //requestAnimationFrame(this.scanQrcode as any)
-    //this.qrCodeData = qrCode.data;
+
+    if(qrCode){
+      this.qrCodeScanned.emit(qrCode.data)
+    }
+
+    requestAnimationFrame(() => {
+      this.scanQrcode(canvas,video)
+    });
+
   }
 
   initCanvasDisplayAndStartCapture(video:HTMLVideoElement,canvasElementRef:ElementRef){
     let canvas = canvasElementRef.nativeElement;
     let canvasContext = canvas.getContext("2d",{ alpha: false })
-    //this.scanQrcode(canvas,video)
-      setInterval(() => {
-       this.scanQrcode(canvas,video)
-     },100);
-
+      this.scanQrcode(canvas,video)
   }
 
   initVideoPlayer(stream:MediaStream,videoplayerElementRef:ElementRef):HTMLVideoElement{
@@ -103,7 +102,6 @@ private scanQrcode(canvas,video){
 
   ngAfterViewInit() {
     if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-
         navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
             return this.initVideoPlayer(stream,this.videoplayerElementRef);
         }).then(videoPlayer=>{
