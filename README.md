@@ -1,2 +1,2 @@
 # Qred-Ng
-Angular component for QR-code reading using web-cam
+Angular component for QR-code using web-cam
