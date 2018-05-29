@@ -5,7 +5,7 @@
   </h1>
   <h2>Demo for QR-code reading using web-cam.</h2>
   <hr/>
-  <qred-ng [width]="'150px'" [height]="'150px'" ></qred-ng>
+  <qred-ng [width]="'150px'" [height]="'150px'" (qrCodeScanned)="onQrCodeScanned($event)" ></qred-ng>
   <hr/>
-  
+  <p>{{qrcodeData}}</p>
 </div>

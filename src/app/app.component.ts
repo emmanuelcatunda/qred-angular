@@ -7,5 +7,10 @@ import {QredNg} from 'projects/qred-ng/src/public_api'
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'app';
+  qrcodeData:String;
+
+  onQrCodeScanned(data:String){
+     this.qrcodeData = data;
+  }
+
 }

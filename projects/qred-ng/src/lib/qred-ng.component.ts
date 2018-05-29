@@ -37,16 +37,16 @@ export class QredNg implements OnInit,AfterViewInit,OnChanges {
   ngOnInit() {}
   ngOnChanges(){}
 
-  captureImageData(canvas){
+private captureImageData(canvas){
     const canvasContext = canvas.getContext("2d")
     return canvasContext.getImageData( 0, 0, canvas.width, canvas.height)
   }
 
-  decodeQrCodeImage(imageData){
+private decodeQrCodeImage(imageData){
       return jsQR(imageData.data, imageData.width, imageData.height);
   }
 
-  detectQrCode(QRcodeHighlightColor,qrCode,canvasContext){
+private detectQrCode(QRcodeHighlightColor,qrCode,canvasContext){
     if (qrCode) {
         canvasContext.beginPath();
         canvasContext.moveTo(qrCode.location.topLeftCorner.x,qrCode.location.topLeftCorner.y);
@@ -61,7 +61,7 @@ export class QredNg implements OnInit,AfterViewInit,OnChanges {
     }
   }
 
-  scanQrcode(canvas,video){
+private scanQrcode(canvas,video){
     const canvasContext = canvas.getContext("2d")
     canvasContext.drawImage(video, 0, 0, canvas.width, canvas.height)
     let imageData = this.captureImageData(canvas)
