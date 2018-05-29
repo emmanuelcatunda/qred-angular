@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component } from '@angular/core'
 import {QredNg} from 'projects/qred-ng/src/public_api'
 
 @Component({
@@ -7,10 +7,11 @@ import {QredNg} from 'projects/qred-ng/src/public_api'
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  qrcodeData:String;
+
+  qrcodeData:String
 
   onQrCodeScanned(data:String){
-     this.qrcodeData = data;
+     this.qrcodeData = data
   }
 
 }

@@ -38,7 +38,7 @@ export class QredNg implements OnInit,AfterViewInit,OnChanges {
   ngOnChanges(){}
 
 private captureImageData(canvas){
-    const canvasContext = canvas.getContext("2d")
+    const canvasContext = canvas.getContext("2d",{ alpha: false })
     return canvasContext.getImageData( 0, 0, canvas.width, canvas.height)
   }
 
@@ -62,22 +62,24 @@ private detectQrCode(QRcodeHighlightColor,qrCode,canvasContext){
   }
 
 private scanQrcode(canvas,video){
-    const canvasContext = canvas.getContext("2d")
+    const canvasContext = canvas.getContext("2d",{ alpha: false })
     canvasContext.drawImage(video, 0, 0, canvas.width, canvas.height)
     let imageData = this.captureImageData(canvas)
-    let qrCode = this.decodeQrCodeImage(imageData);
+    let qrCode = this.decodeQrCodeImage(imageData)
     this.detectQrCode(this.QRcodeHighlightColor,qrCode,canvasContext)
     if(qrCode)
-    this.qrCodeScanned.emit(qrCode.data);
+    this.qrCodeScanned.emit(qrCode.data)
+    //requestAnimationFrame(this.scanQrcode as any)
     //this.qrCodeData = qrCode.data;
   }
 
   initCanvasDisplayAndStartCapture(video:HTMLVideoElement,canvasElementRef:ElementRef){
     let canvas = canvasElementRef.nativeElement;
-    let canvasContext = canvas.getContext("2d")
-     setInterval(() => {
-      this.scanQrcode(canvas,video)
-    },100);
+    let canvasContext = canvas.getContext("2d",{ alpha: false })
+    //this.scanQrcode(canvas,video)
+      setInterval(() => {
+       this.scanQrcode(canvas,video)
+     },100);
 
   }
 
