@@ -1,7 +1,5 @@
-import { Component, OnInit,AfterViewInit ,OnChanges} from '@angular/core';
-import { ElementRef } from '@angular/core';
-import { ViewChild } from '@angular/core';
-import { Input } from '@angular/core';
+import {AfterViewInit,Component,ElementRef,EventEmitter,Input,OnInit,OnChanges,Output,ViewChild} from '@angular/core';
+import jsQR from 'jsqr';
 
 @Component({
   selector: 'qred-ng',
@@ -10,7 +8,9 @@ import { Input } from '@angular/core';
 })
 export class QredNg implements OnInit,AfterViewInit,OnChanges {
 
-  cssClass:String = "target-color-red"
+
+
+  cssClass:String = "target-color-default"
 
   @ViewChild('canvasDisplay', {read: ElementRef})
   canvasDisplayElementRef:ElementRef;
@@ -21,33 +21,63 @@ export class QredNg implements OnInit,AfterViewInit,OnChanges {
   videoplayer: HTMLVideoElement;
 
   @Input()
+  QRcodeHighlightColor = "green"
+
+  @Input()
   width:String
 
   @Input()
   height:String
 
- constructor() {}
+  @Output() qrCodeScanned = new EventEmitter<String>();
 
-  ngOnInit() {
-    console.log("init")
-  }
-  ngOnChanges(){
+  qrCodeData:String;
+
+  constructor() {}
+  ngOnInit() {}
+  ngOnChanges(){}
+
+  captureImageData(canvas){
+    const canvasContext = canvas.getContext("2d")
+    return canvasContext.getImageData( 0, 0, canvas.width, canvas.height)
   }
 
-  captureImageData(){
-    
+  decodeQrCodeImage(imageData){
+      return jsQR(imageData.data, imageData.width, imageData.height);
+  }
+
+  detectQrCode(QRcodeHighlightColor,qrCode,canvasContext){
+    if (qrCode) {
+        canvasContext.beginPath();
+        canvasContext.moveTo(qrCode.location.topLeftCorner.x,qrCode.location.topLeftCorner.y);
+        canvasContext.lineTo(qrCode.location.bottomLeftCorner.x, qrCode.location.bottomLeftCorner.y);
+        canvasContext.lineTo(qrCode.location.bottomRightCorner.x, qrCode.location.bottomRightCorner.y);
+        canvasContext.lineTo(qrCode.location.topRightCorner.x, qrCode.location.topRightCorner.y);
+        canvasContext.lineTo(qrCode.location.topLeftCorner.x,qrCode.location.topLeftCorner.y);
+        canvasContext.closePath();
+        canvasContext.lineWidth = 4;
+        canvasContext.strokeStyle = QRcodeHighlightColor;
+        canvasContext.stroke();
+    }
+  }
+
+  scanQrcode(canvas,video){
+    const canvasContext = canvas.getContext("2d")
+    canvasContext.drawImage(video, 0, 0, canvas.width, canvas.height)
+    let imageData = this.captureImageData(canvas)
+    let qrCode = this.decodeQrCodeImage(imageData);
+    this.detectQrCode(this.QRcodeHighlightColor,qrCode,canvasContext)
+    if(qrCode)
+    this.qrCodeScanned.emit(qrCode.data);
+    //this.qrCodeData = qrCode.data;
   }
 
   initCanvasDisplayAndStartCapture(video:HTMLVideoElement,canvasElementRef:ElementRef){
     let canvas = canvasElementRef.nativeElement;
     let canvasContext = canvas.getContext("2d")
-    let imageData;
-    setInterval(() => {
-      canvasContext.drawImage(video, 0, 0, canvas.width, canvas.height),
-      imageData = canvasContext.getImageData( 1, 1, canvas.width, canvas.height)
-    }, 1000);
-    //let data = console.log(canvasContext.getImageData( 1, 1, canvas.width, canvas.height));
-    //canvasContext.drawImage(video, 0, 0, canvas.width, canvas.height);
+     setInterval(() => {
+      this.scanQrcode(canvas,video)
+    },100);
 
   }
 
@@ -57,6 +87,7 @@ export class QredNg implements OnInit,AfterViewInit,OnChanges {
     if ('srcObject' in videoplayer) {
         videoplayer.defaultMuted=true;
         videoplayer.msHorizontalMirror=false;
+        videoplayer.setAttribute("playsinline", "true");
         videoplayer.srcObject = stream;
         videoplayer.src = (window.URL || (window as any ).webkitURL).createObjectURL(stream);
     }
