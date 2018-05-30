@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule,Input,OnInit } from '@angular/core';
 import { QredNg } from './qred-ng.component';
 import { ViewChild } from '@angular/core';
 @NgModule({

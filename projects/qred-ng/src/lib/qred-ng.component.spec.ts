@@ -2,8 +2,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { QredNg } from './qred-ng.component';
 
-describe('QredNgComponent', () => {
-  let component: QredNg;
+describe('QredNg', () => {
+   let component: QredNg;
   let fixture: ComponentFixture<QredNg>;
 
   beforeEach(async(() => {
@@ -19,7 +19,7 @@ describe('QredNgComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create qr-red', () => {
     expect(component).toBeTruthy();
   });
 });
