@@ -90,7 +90,7 @@ private scanQrcode(canvas,video){
         videoplayer.msHorizontalMirror=false;
         videoplayer.setAttribute("playsinline", "true");
         videoplayer.srcObject = stream;
-        videoplayer.src = (window.URL || (window as any ).webkitURL).createObjectURL(stream);
+        //videoplayer.src = (window.URL || (window as any ).webkitURL).createObjectURL(stream);
     }
     else if((navigator as any ).mozGetUserMedia){
         (videoplayer as any ).mozSrcObject = stream;
@@ -102,7 +102,7 @@ private scanQrcode(canvas,video){
 
   ngAfterViewInit() {
     if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-        navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
+        navigator.mediaDevices.getUserMedia({ video: {facingMode: "environment"}}).then(stream => {
             return this.initVideoPlayer(stream,this.videoplayerElementRef);
         }).then(videoPlayer=>{
               this.initCanvasDisplayAndStartCapture(videoPlayer,this.canvasDisplayElementRef);
